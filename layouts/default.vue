@@ -7,13 +7,9 @@
         <p class="text-h4 ml-4">Movie Search</p>
         <v-spacer></v-spacer>
         
-        <v-text-field
-          variant="outlined"
-          density="compact"
-          hide-details
-          append-inner-icon="mdi-magnify"
-          placeholder="Search"
-          ></v-text-field>
+      <!-- Aquí va tu componente -->
+      <TextInput v-model="search" />
+   
       </v-container>
     </v-app-bar>
 
@@ -23,4 +19,7 @@
     </v-main>
   </v-app>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TextInput from "../components/TextInput/index"
+const search = ref("")
+</script>
