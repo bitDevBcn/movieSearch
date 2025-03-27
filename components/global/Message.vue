@@ -12,5 +12,4 @@
     import { useMessageStore } from '@/stores/message'
     //recuperamos store
     const messageStore = useMessageStore(); 
-    
 </script>

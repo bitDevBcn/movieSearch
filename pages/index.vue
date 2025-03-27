@@ -1,36 +1,16 @@
 <template>
   <v-container>
     <p class="text-h4 mt-12 mb-6">Feature Today</p>
-    
-    <v-row>
-      <v-col
-        v-for="(movie, index) in movieStore.movies"
-        :key="movie.id"
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
-      >
-        <v-card class="position-relative">
-          <v-img
-            :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
-            rounded
-          />
-          <!--Cargamos compoentes ScoreCircle-->
-          <ScoreCircle :popularity="movie.vote_average" />
+    <div>
+    {{ trt }}
+    </div>
 
-          <v-card-title class="text-subtitle-1 mt-1">
-            {{ movie.title }}
-          </v-card-title>
-          <v-card-subtitle>
-            {{ movie.release_date }}
-          </v-card-subtitle>
-          <v-card-text class="text-truncate">
-            {{ movie.overview }}
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <Home />  
+    <v-pagination
+              v-model="page"
+              :length="movieStore.movies?.total_pages"
+              class="my-4"
+            ></v-pagination> 
   </v-container>
 </template>
 
@@ -39,11 +19,15 @@
 //recuperamos datos del store 
 const movieStore = useMoviesStore();
 
+//Paginacion v-pagination
+const page: Ref<number> = ref(1)
 
 // Llamar al cargar el componente
 onBeforeMount(() => {
   movieStore.movieFeatures();
 });
+
+
 </script>
 
 <style scoped></style>

@@ -39,7 +39,7 @@ export const useMoviesStore = defineStore("movies", () => {
       }
 
       const data: Movies = await response.json();
-
+      
       movies.value = data.results
         .slice(0, 12)
         .map((movie: Results) => ({
@@ -80,9 +80,7 @@ export const useMoviesStore = defineStore("movies", () => {
       }
 
       const data: Movies = await response.json();
-
       movies.value = data.results
-        .slice(0, 12)
         .map((movie: Results) => ({
           ...movie,
           release_date: useDateFormat(
@@ -96,7 +94,6 @@ export const useMoviesStore = defineStore("movies", () => {
       messageStore.showMsg = true;
       messageStore.message =
         error instanceof Error ? error.message : "Unexpected error while searching for movies.";
-      console.error("Movie search error:", error);
     }
   };
 
