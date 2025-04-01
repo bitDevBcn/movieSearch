@@ -2,7 +2,14 @@
 const MovieSearchTheme = {
   dark: true,
   colors: {
-    background : "#020617"
+    background: "#020617",
+    surface: "#1e293b",
+    primary: "#3b82f6",
+    secondary: "#64748b",
+    error: "#ef4444",
+    info: "#0ea5e9",
+    success: "#10b981",
+    warning: "#facc15"
   }
 }
 

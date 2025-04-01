@@ -1,19 +1,15 @@
 <template>
   <v-container>
     <p class="text-h4 mt-12 mb-6">Feature Today</p>
-    <div>
-    {{ trt }}
-    </div>
-
     <Home />  
-    <v-pagination
-              v-model="page"
-              :length="movieStore.movies?.total_pages"
-              class="my-4"
-            ></v-pagination> 
+      <v-pagination
+                v-model="movieStore.page"
+                :length="movieStore.totalPages"
+                class="my-4"
+              >
+      </v-pagination> 
   </v-container>
 </template>
-
 <script setup lang="ts">
 
 //recuperamos datos del store 
@@ -27,7 +23,10 @@ onBeforeMount(() => {
   movieStore.movieFeatures();
 });
 
-
+// 👇 Reaccionar cuando cambia la página y recargar películas
+watch(() => movieStore.page, () => {
+  movieStore.movieFeatures() // o movieSearch(query) si estás buscando
+})
 </script>
 
 <style scoped></style>

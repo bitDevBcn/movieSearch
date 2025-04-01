@@ -1,4 +1,4 @@
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
 import { useMessageStore } from "@/stores/message";
 import { useDateFormat } from "@vueuse/core";
@@ -21,12 +21,15 @@ interface Movies {
 export const useMoviesStore = defineStore("movies", () => {
   const runtimeConfig = useRuntimeConfig();
   const movies = ref<Results[]>([]);
+  const totalPages = ref<number>(0);
+  const totalResults = ref<number>(0);
   const messageStore = useMessageStore();
+  const page: Ref<number> = ref(1);
 
   // 🔍 Películas destacadas
   const movieFeatures = async () => {
     try {
-      const response = await fetch("https://api.themoviedb.org/3/discover/movie?page=1", {
+      const response = await fetch(`https://api.themoviedb.org/3/discover/movie?page=1`, {
         method: "GET",
         headers: {
           accept: "application/json",
@@ -39,17 +42,18 @@ export const useMoviesStore = defineStore("movies", () => {
       }
 
       const data: Movies = await response.json();
-      
-      movies.value = data.results
-        .slice(0, 12)
-        .map((movie: Results) => ({
-          ...movie,
-          release_date: useDateFormat(
-            new Date(movie.release_date),
-            "MMMM YYYY",
-            { locales: "en-US" }
-          ).value,
-        }));
+
+      totalPages.value = data.total_pages;
+      totalResults.value = data.total_results;
+
+      movies.value = data.results.slice(0, 12).map((movie: Results) => ({
+        ...movie,
+        release_date: useDateFormat(
+          new Date(movie.release_date),
+          "MMMM YYYY",
+          { locales: "en-US" }
+        ).value,
+      }));
 
     } catch (error: unknown) {
       messageStore.showMsg = true;
@@ -67,7 +71,7 @@ export const useMoviesStore = defineStore("movies", () => {
     }
 
     try {
-      const response = await fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&page=1`, {
+      const response = await fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&page=${page.value}`, {
         method: "GET",
         headers: {
           accept: "application/json",
@@ -80,15 +84,18 @@ export const useMoviesStore = defineStore("movies", () => {
       }
 
       const data: Movies = await response.json();
-      movies.value = data.results
-        .map((movie: Results) => ({
-          ...movie,
-          release_date: useDateFormat(
-            new Date(movie.release_date),
-            "MMMM YYYY",
-            { locales: "en-US" }
-          ).value,
-        }));
+
+      totalPages.value = data.total_pages;
+      totalResults.value = data.total_results;
+
+      movies.value = data.results.map((movie: Results) => ({
+        ...movie,
+        release_date: useDateFormat(
+          new Date(movie.release_date),
+          "MMMM YYYY",
+          { locales: "en-US" }
+        ).value,
+      }));
 
     } catch (error: unknown) {
       messageStore.showMsg = true;
@@ -97,12 +104,11 @@ export const useMoviesStore = defineStore("movies", () => {
     }
   };
 
-  onMounted(() => {
-    movieFeatures();
-  });
-
   return {
+    page,
     movies,
+    totalPages,
+    totalResults,
     movieFeatures,
     movieSearch,
   };

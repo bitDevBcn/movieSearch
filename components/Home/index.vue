@@ -15,9 +15,8 @@
         />
         <!--Cargamos compoentes ScoreCircle-->
         <ScoreCircle :popularity="movie.vote_average" />
-
         <v-card-title class="text-subtitle-1 mt-1">
-          {{ movie.title }}
+          {{ movie.title?.length > 10 ? movie.title.slice(0, 25) + '...' : movie.title }}
         </v-card-title>
         <v-card-subtitle>
           {{ movie.release_date }}
